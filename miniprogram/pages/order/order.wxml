@@ -1,2 +1,4 @@
 <!--pages/order/order.wxml-->
-<text>pages/order/order.wxml</text>
+<view wx:if="{{!userInfo}}">
+  <login bindonLogin="onTapLogin"></login>
+</view>

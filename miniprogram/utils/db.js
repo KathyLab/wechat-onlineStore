@@ -1,3 +1,5 @@
+/***云开发函数***/
+
 //获取数据库引用
 const db = wx.cloud.database({
   env: 'kathylab-1ra3b'    //环境ID

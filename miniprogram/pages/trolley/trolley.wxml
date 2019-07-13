@@ -1,2 +1,5 @@
 <!--pages/trolley/trolley.wxml-->
-<text>pages/trolley/trolley.wxml</text>
+<view wx:if="{{!userInfo}}">
+  <login bindonLogin="onTapLogin"></login>
+</view>
+
