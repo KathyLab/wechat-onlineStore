@@ -5,12 +5,14 @@ const db = wx.cloud.database({
   env: 'kathylab-1ra3b'    //环境ID
 })
 
+const util = require('./util')
+
 module.exports = {
-  getProductList() {
+  getProductList: () => {
     return db.collection('product').get()
   },
 
-  getProductDetail(id){
+  getProductDetail: id =>{
     //调用云函数
     return wx.cloud.callFunction({
       name: 'productDetail',
@@ -18,5 +20,40 @@ module.exports = {
         id: id
       }
     })
+  },
+
+  addOrder: data => {
+    return util.isAuthenticated()
+    .then(() => {
+      return wx.cloud.callFunction({
+        name: 'addOrder',
+        data,
+      })
+    })
+    .catch(() => {
+      wx.showToast({
+        icon: 'none',
+        title: '请先登录'
+      })
+      return {}
+    })
+    
+  },
+
+  getOrders: () => {
+    return util.isAuthenticated()
+    .then(() => {
+      return wx.cloud.callFunction({
+        name: 'getOrders',
+      })
+    })
+    .catch(() => {
+      wx.showToast({
+        icon: 'none',
+        title: '请先登录'
+      })
+      return {}
+    })
+
   }
 }

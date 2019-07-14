@@ -46,6 +46,8 @@ Page({
       this.setData({
         userInfo
       })
+    }).catch(err => {
+      console.log('未授权登录')
     })
   }
 

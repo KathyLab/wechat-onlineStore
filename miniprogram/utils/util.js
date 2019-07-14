@@ -1,24 +1,33 @@
 
 module.exports = {
-  priceFormat(price){
+  priceFormat: (price) =>{
     return parseFloat(Math.round(price * 100) / 100).toFixed(2)
   },
 
-  getUserInfo(){
+  getUserInfo() {
+    return new Promise((resolve, reject) => {
+     this.isAuthenticated().then(() => {
+      //已同意授权，获取用户信息
+       wx.getUserInfo({
+         success: res => {
+           const userInfo = res.userInfo
+           resolve(userInfo)
+         }
+       })
+     }).catch(() => {
+       reject()
+     })
+    })
+  },
+
+  isAuthenticated: () => {
     return new Promise((resolve, reject) => {
       wx.getSetting({
-        success: res => {    
-          if(res.authSetting['scope.userInfo'] === false){
-             //已拒绝授权
-            reject()
+        success: res => {
+          if(res.authSetting['scope.userInfo'] === true){
+            resolve()
           }else{
-            //已同意授权，获取用户信息
-            wx.getUserInfo({
-              success: res => {
-                const userInfo = res.userInfo
-                resolve(userInfo)
-              }
-            })
+            reject()
           }
         }
       })

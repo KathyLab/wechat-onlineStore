@@ -45,5 +45,42 @@ Page({
         wx.navigateBack()
       }, 2000)
     })
+  },
+  buy(){
+    wx.showLoading({
+      title: '商品购买中...',
+    })
+
+    const product = Object.assign({
+      count: 1
+    }, this.data.product)
+
+    db.addOrder({
+      list: [product]
+    }).then(res => {
+      wx.hideLoading()
+
+      const data = res.result
+
+      if(data){
+        wx.showToast({
+          title: '商品购买成功',
+        })
+      }
+      // else{
+      //   wx.showToast({
+      //     icon: 'none',
+      //     title: '商品购买失败',
+      //   })
+      // }
+    }).catch(err => {
+      console.error(err)
+      wx.hideLoading()
+
+      wx.showToast({
+        icon: 'none',
+        title: '商品购买失败',
+      })
+    })
   }
 })
