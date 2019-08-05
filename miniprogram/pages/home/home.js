@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    
+    productList: []  //商品列表
   },
 
   /**
@@ -20,11 +20,11 @@ Page({
 
   getProductList() {
     wx.showLoading({
-      title: '商品数据加载中...',
+      title: '商品数据加载中',
     })
 
     db.getProductList().then(result => {
-      console.log(result)
+      // console.log(result)
       wx.hideLoading()
 
       const data = result.data
@@ -51,52 +51,41 @@ Page({
 
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
+  addToTrolley(event){
+    let productId = event.currentTarget.dataset.id
+    let productList = this.data.productList
+    let product
 
-  },
+    for(let i = 0, len = productList.length; i < len; i++){
+      if(productList[i]._id === productId){
+        product = productList[i]
+        break
+      }
+    }
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
+    if(product){
+      db.addToTrolley(product).then(res => {
+        wx.hideLoading()
 
-  },
+        const data = res.result
+        //console.log(data)
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
+        if (data) {
+          wx.showToast({
+            title: '已添加到购物车',
+          })
+        }
+      }).catch(err => {
+        console.error(err)
+        wx.hideLoading()()
 
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+        wx.showToast({
+          icon: 'none',
+          title: '添加到购物车失败',
+        })
+      })
+    }
+ 
   }
+
 })

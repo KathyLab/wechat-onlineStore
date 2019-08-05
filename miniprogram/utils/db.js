@@ -54,6 +54,64 @@ module.exports = {
       })
       return {}
     })
+  },
 
+  addToTrolley: data => {
+    return util.isAuthenticated().then(() => {
+      return wx.cloud.callFunction({
+        name: 'addToTrolley',
+        data
+      }).catch(() => {
+        wx.showToast({
+          title: 'Failed',
+        })
+      })
+    }).catch(() => {
+      wx.showToast({
+        icon: 'none',
+        title: '请先登录'
+      })
+
+      return {}
+    })
+  },
+
+  getTrolley: () => {
+    return util.isAuthenticated()
+      .then(() => {
+        return wx.cloud.callFunction({
+          name: 'getTrolley'
+        }).catch(() => {
+          wx.showToast({
+            icon: 'none',
+            title: 'Failed'
+          })
+        })
+      }).catch(() => {
+        wx.showToast({
+          icon: 'none',
+          title: '请先登录'
+        })
+
+        return {}
+      })
+  },
+
+  updateTrolley(list){
+    return util.isAuthenticated()
+    .then(() => {
+      return wx.cloud.callFunction({
+        name: 'updateTrolley',
+        data: {
+          list
+        }
+      })
+    }).catch(() => {
+      wx.showToast({
+        icon: 'none',
+        title: '请先登录'
+      })
+      return {}
+    })
   }
 }

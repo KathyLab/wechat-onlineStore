@@ -15,6 +15,7 @@ exports.main = async (event, context) => {
   //const user = event.userInfo.openId
    
   const productList = event.list || []
+  const isTrolleyBuy = !!event.isTrolleyBuy
   
   await db.collection('order').add({
     data: {
@@ -23,6 +24,12 @@ exports.main = async (event, context) => {
       productList
     }
   })
+
+  if(isTrolleyBuy){
+    await db.collection('trolley').where({
+      _id: db.command.in(productList.map(product => product._id))
+    }).remove()
+  }
   
   return {}
 }

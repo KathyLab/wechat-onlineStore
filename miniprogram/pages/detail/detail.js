@@ -9,7 +9,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    product: {}
   },
 
   /**
@@ -55,6 +55,7 @@ Page({
       count: 1
     }, this.data.product)
 
+
     db.addOrder({
       list: [product]
     }).then(res => {
@@ -80,6 +81,33 @@ Page({
       wx.showToast({
         icon: 'none',
         title: '商品购买失败',
+      })
+    })
+  },
+
+  addToTrolley(){
+    wx.showLoading({
+      title: '正在添加到购物车...',
+    })
+
+    db.addToTrolley(this.data.product).then(res => {
+      wx.hideLoading()
+
+      const data = res.result
+      console.log(data)
+
+      if(data){
+        wx.showToast({
+          title: '已添加到购物车',
+        })
+      }
+    }).catch(err => {
+      console.error(err)
+      wx.hideLoading()()
+
+      wx.showToast({
+        icon: 'none',
+        title: '添加到购物车失败',
       })
     })
   }
