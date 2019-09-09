@@ -113,5 +113,33 @@ module.exports = {
       })
       return {}
     })
+  },
+
+  addComment(data){
+    return util.isAuthenticated().then(() => {
+      return wx.cloud.callFunction({
+        name: 'addComment',
+        data
+      }).catch(() => {
+        wx.showToast({
+          icon: 'none',
+          title: '请先登录'
+        })
+        return {}
+      })
+    })
+  },
+
+  getComments(productId){
+    return db.collection('comment').where({
+      productId
+    }).get()
+  },
+
+  uploadImage(imgPath) {
+    return wx.cloud.uploadFile({
+      cloudPath: `comment/${util.getId()}`,
+      filePath: imgPath
+    })
   }
 }

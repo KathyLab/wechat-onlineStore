@@ -9,7 +9,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    product: {}
+    product: {},
+    haveComment: true
   },
 
   /**
@@ -110,5 +111,14 @@ Page({
         title: '添加到购物车失败',
       })
     })
+  },
+
+  onTapCommentEntry(){
+    let product = this.data.product
+    if(this.data.product.commentCount){
+      wx.navigateTo({
+        url: `/pages/comment/comment?id=${product._id}&price=${product.price}&name=${product.name}&image=${product.image}`,
+      })
+    }
   }
 })
